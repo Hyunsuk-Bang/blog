@@ -22,4 +22,14 @@ func main() {
 	id := createBlog(c)
 	blog := readBlog(c, id)
 	log.Printf("%v\n", blog)
+
+	updateBlog(c, id)
+	blog = readBlog(c, id)
+	log.Printf("%v\n", blog)
+
+	listBlog(c)
+
+	deleteBlog(c, id)
+
+	listBlog(c)
 }

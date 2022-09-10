@@ -20,6 +20,7 @@ type Server struct {
 }
 
 func main() {
+	//Connect to MongoDB
 	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://root:password@localhost:27017/"))
 	if err != nil {
 		log.Fatal(err)
@@ -29,6 +30,8 @@ func main() {
 		log.Fatal(err)
 	}
 	collection = client.Database("blogdb").Collection("blog")
+
+	// Open tcp connection
 	lis, err := net.Listen("tcp", addr)
 	if err != nil {
 		log.Fatalf("SERVER: Error listening from %s\n ERROR: %v", addr, err)
