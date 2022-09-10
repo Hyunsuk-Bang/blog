@@ -1,1 +1,8 @@
-./bin/*
+/bin
+ca.key
+ca.crt
+server.key
+server.csr
+file
+server.crt
+server.pem
