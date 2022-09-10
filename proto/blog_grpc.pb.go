@@ -27,7 +27,7 @@ type BlogServiceClient interface {
 	ReadBlog(ctx context.Context, in *BlogId, opts ...grpc.CallOption) (*Blog, error)
 	UpdateBlog(ctx context.Context, in *Blog, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteBlog(ctx context.Context, in *BlogId, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ListBlogd(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (BlogService_ListBlogdClient, error)
+	ListBlog(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (BlogService_ListBlogClient, error)
 }
 
 type blogServiceClient struct {
@@ -74,12 +74,12 @@ func (c *blogServiceClient) DeleteBlog(ctx context.Context, in *BlogId, opts ...
 	return out, nil
 }
 
-func (c *blogServiceClient) ListBlogd(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (BlogService_ListBlogdClient, error) {
-	stream, err := c.cc.NewStream(ctx, &BlogService_ServiceDesc.Streams[0], "/blog.BlogService/ListBlogd", opts...)
+func (c *blogServiceClient) ListBlog(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (BlogService_ListBlogClient, error) {
+	stream, err := c.cc.NewStream(ctx, &BlogService_ServiceDesc.Streams[0], "/blog.BlogService/ListBlog", opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &blogServiceListBlogdClient{stream}
+	x := &blogServiceListBlogClient{stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -89,16 +89,16 @@ func (c *blogServiceClient) ListBlogd(ctx context.Context, in *emptypb.Empty, op
 	return x, nil
 }
 
-type BlogService_ListBlogdClient interface {
+type BlogService_ListBlogClient interface {
 	Recv() (*Blog, error)
 	grpc.ClientStream
 }
 
-type blogServiceListBlogdClient struct {
+type blogServiceListBlogClient struct {
 	grpc.ClientStream
 }
 
-func (x *blogServiceListBlogdClient) Recv() (*Blog, error) {
+func (x *blogServiceListBlogClient) Recv() (*Blog, error) {
 	m := new(Blog)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -114,7 +114,7 @@ type BlogServiceServer interface {
 	ReadBlog(context.Context, *BlogId) (*Blog, error)
 	UpdateBlog(context.Context, *Blog) (*emptypb.Empty, error)
 	DeleteBlog(context.Context, *BlogId) (*emptypb.Empty, error)
-	ListBlogd(*emptypb.Empty, BlogService_ListBlogdServer) error
+	ListBlog(*emptypb.Empty, BlogService_ListBlogServer) error
 	mustEmbedUnimplementedBlogServiceServer()
 }
 
@@ -134,8 +134,8 @@ func (UnimplementedBlogServiceServer) UpdateBlog(context.Context, *Blog) (*empty
 func (UnimplementedBlogServiceServer) DeleteBlog(context.Context, *BlogId) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteBlog not implemented")
 }
-func (UnimplementedBlogServiceServer) ListBlogd(*emptypb.Empty, BlogService_ListBlogdServer) error {
-	return status.Errorf(codes.Unimplemented, "method ListBlogd not implemented")
+func (UnimplementedBlogServiceServer) ListBlog(*emptypb.Empty, BlogService_ListBlogServer) error {
+	return status.Errorf(codes.Unimplemented, "method ListBlog not implemented")
 }
 func (UnimplementedBlogServiceServer) mustEmbedUnimplementedBlogServiceServer() {}
 
@@ -222,24 +222,24 @@ func _BlogService_DeleteBlog_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BlogService_ListBlogd_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _BlogService_ListBlog_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(emptypb.Empty)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(BlogServiceServer).ListBlogd(m, &blogServiceListBlogdServer{stream})
+	return srv.(BlogServiceServer).ListBlog(m, &blogServiceListBlogServer{stream})
 }
 
-type BlogService_ListBlogdServer interface {
+type BlogService_ListBlogServer interface {
 	Send(*Blog) error
 	grpc.ServerStream
 }
 
-type blogServiceListBlogdServer struct {
+type blogServiceListBlogServer struct {
 	grpc.ServerStream
 }
 
-func (x *blogServiceListBlogdServer) Send(m *Blog) error {
+func (x *blogServiceListBlogServer) Send(m *Blog) error {
 	return x.ServerStream.SendMsg(m)
 }
 
@@ -269,8 +269,8 @@ var BlogService_ServiceDesc = grpc.ServiceDesc{
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "ListBlogd",
-			Handler:       _BlogService_ListBlogd_Handler,
+			StreamName:    "ListBlog",
+			Handler:       _BlogService_ListBlog_Handler,
 			ServerStreams: true,
 		},
 	},
