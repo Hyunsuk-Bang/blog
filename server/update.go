@@ -28,10 +28,11 @@ func (s *Server) UpdateBlog(ctx context.Context, in *pb.Blog) (*emptypb.Empty, e
 		Title:    in.Title,
 		Content:  in.Content,
 	}
+	log.Println(oid)
 	res, err := collection.UpdateOne(
 		ctx,
 		bson.M{"_id": oid},
-		bson.M{"set": data},
+		bson.M{"$set": data}, //$set for update
 	)
 
 	if err != nil {
